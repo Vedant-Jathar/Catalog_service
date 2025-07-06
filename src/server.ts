@@ -1,9 +1,11 @@
 import app from "./app";
 import logger from "./config/logger";
+import config from 'config'
 
 const startServer = () => {
-    const PORT = 5502;
+
     try {
+        const PORT: number = config.get("server.port")
         app.listen(PORT, () => logger.info(`Listening on port ${PORT}`));
     } catch (err: unknown) {
         if (err instanceof Error) {
