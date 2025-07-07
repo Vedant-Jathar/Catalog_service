@@ -1,10 +1,13 @@
 import app from "./app";
 import logger from "./config/logger";
 import config from 'config'
+import mongoose from "mongoose";
 
-const startServer = () => {
+const startServer = async () => {
 
     try {
+        await mongoose.connect(config.get("database.url"))
+        logger.info("Mongo Database connection successful")
         const PORT: number = config.get("server.port")
         app.listen(PORT, () => logger.info(`Listening on port ${PORT}`));
     } catch (err: unknown) {
@@ -17,4 +20,4 @@ const startServer = () => {
     }
 };
 
-startServer();
+void startServer();
