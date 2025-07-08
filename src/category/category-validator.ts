@@ -14,7 +14,7 @@ export const createCategoryValidator = [
 
     body("priceConfiguration.*.priceType")
         .exists()
-        .withMessage("Category Name is required")
+        .withMessage("Price Type is required")
         .custom((value: "base" | "addistional") => {
             const validTypes = ["base", "additional"]
             if (!validTypes.includes(value)) {

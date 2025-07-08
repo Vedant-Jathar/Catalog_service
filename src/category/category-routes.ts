@@ -15,5 +15,13 @@ const categoryController = new CategoryController(categoryService, logger)
 
 router.post('/', authenticate, canAcces([Roles.ADMIN]), createCategoryValidator, asyncWrapper(categoryController.create))
 
+router.get("/", asyncWrapper(categoryController.getListOfCategories))
+
+router.get("/:id", asyncWrapper(categoryController.getCategoryById))
+
+router.delete('/:id', authenticate, canAcces([Roles.ADMIN]), asyncWrapper(categoryController.deleteCategory))
+
+router.patch('/:id', authenticate, canAcces([Roles.ADMIN]), createCategoryValidator, asyncWrapper(categoryController.updateCategory))
+
 export default router
 
