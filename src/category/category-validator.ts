@@ -1,4 +1,3 @@
-import { error } from "console"
 import { body } from "express-validator"
 import createHttpError from "http-errors"
 
