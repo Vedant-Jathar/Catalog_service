@@ -20,7 +20,7 @@ export class CategoryController {
         const { name, priceConfiguration, attributes } = req.body
         const newCategory = await this.categoryService.create({ name, priceConfiguration, attributes })
         this.logger.info("Category created successfully")
-        res.json({ id: newCategory._id })
+        res.status(201).json({ id: newCategory._id })
     }
 
     getCategoryById = async (req: Request, res: Response) => {
