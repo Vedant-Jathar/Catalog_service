@@ -1,6 +1,6 @@
 import { body } from "express-validator";
 
-export const productValidator = [
+export const createProductValidator = [
     body("name")
         .exists()
         .withMessage("Product name is required")
@@ -15,14 +15,6 @@ export const productValidator = [
         .exists()
         .withMessage("PriceConfiguration is required"),
 
-    // body("image")
-    //     .exists()
-    //     .withMessage("Image is required")
-    //     .custom((value, { req }) => {
-    //         if (!req.files) return false
-    //         return true
-    //     }),
-    
     body("attributes")
         .exists()
         .withMessage("Attributes aretenantId required"),

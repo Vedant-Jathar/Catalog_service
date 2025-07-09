@@ -8,7 +8,7 @@ export interface Product {
     tenantId: string,
     categoryId: string,
     isPublished: string,
-    image: string
+    image?: string
 }
 
 export interface CreateProductRequest extends Request {
