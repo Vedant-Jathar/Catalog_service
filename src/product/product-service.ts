@@ -4,6 +4,10 @@ import productModel from "./product-model";
 
 export class ProductService {
 
+    getProductById = async (id: string) => {
+        return await productModel.findById(id)
+    }
+
     createProduct = async (product: Product) => {
         return await ProductModel.create(product)
     }

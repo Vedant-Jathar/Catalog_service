@@ -8,6 +8,8 @@ import { FileStorage } from "../common/types/storage"
 import { v4 as uuidv4 } from "uuid"
 import { UploadedFile } from "express-fileupload"
 import productModel from "./product-model"
+import { Roles } from "../common/constants"
+import { AuthRequest } from "../common/types"
 
 export class ProductController {
     constructor(private productService: ProductService, private logger: Logger, private storage: FileStorage) {
@@ -64,10 +66,19 @@ export class ProductController {
 
         const { productId } = req.params
 
-        const existingProduct = await productModel.findById(productId)
+        const existingProduct = await this.productService.getProductById(productId)
 
         if (!existingProduct) {
             next(createHttpError(404, "Product not found"))
+        }
+
+        // Check if the user trying to update this product is the manager of the tenant the product belongs to:
+
+        if ((req as AuthRequest).auth.role !== Roles.ADMIN) {
+            if ((req as AuthRequest).auth.tenantId !== existingProduct?.tenantId) {
+                next(createHttpError(403, "Forbidden- You are not allowed to access this product"))
+                return
+            }
         }
 
         let imageName: string | undefined
