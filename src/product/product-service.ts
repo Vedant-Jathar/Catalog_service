@@ -1,15 +1,16 @@
-import { Filters, Product } from "./product-types";
+import { Filters, PaginationFilters, Product } from "./product-types";
 import ProductModel from "./product-model"
 import productModel from "./product-model";
+import { PaginationLabels } from "../config/pagination";
 
 export class ProductService {
 
     getProductById = async (id: string) => {
-        return await productModel.findById(id)
+        return await productModel.findById(id) as Product
     }
 
     createProduct = async (product: Product) => {
-        return await ProductModel.create(product)
+        return await ProductModel.create(product) as Product
     }
 
     updateProduct = async (productId: string, product: Product) => {
@@ -18,10 +19,10 @@ export class ProductService {
                 $set: product
             },
             { new: true }
-        )
+        ) as Product
     }
 
-    getFilteredProducts = async (q: string, filters: Filters) => {
+    getFilteredProducts = async (q: string, filters: Filters, paginationFilters: PaginationFilters) => {
 
         const searchQueryExp = new RegExp(q, "i")
         const matchQuery = {
@@ -29,9 +30,7 @@ export class ProductService {
             name: searchQueryExp
         }
 
-        console.log("matchQuery", matchQuery);
-
-        const filteredProducts: Product[] = await productModel.aggregate([
+        const aggregationPipeline = [
             {
                 $match: matchQuery
             },
@@ -55,8 +54,13 @@ export class ProductService {
                 $unwind: "$category"
             }
 
-        ])
+        ]
 
-        return filteredProducts
+        return productModel.aggregatePaginate(productModel.aggregate(aggregationPipeline), {
+            ...paginationFilters,
+            customLabels: PaginationLabels
+        })
     }
+
+    
 }

@@ -119,26 +119,31 @@ export class ProductController {
     }
 
     getProducts = async (req: getProductsRequest, res: Response) => {
-        const { q, tenantId, categoryId, isPublished } = req.query
+        const { q, tenantId, categoryId, isPublished, page, limit } = req.query
 
-        console.log("q", q);
-        console.log("req.query", req.query);
+        const paginationFilters = {
+            page: page ? parseInt(page) : 1,
+            limit: limit ? parseInt(limit) : 10
+        }
 
         const filters: Filters = {}
 
         if (tenantId) {
             filters.tenantId = tenantId
         }
+
         if (categoryId && mongoose.Types.ObjectId.isValid(categoryId)) {
             filters.categoryId = new mongoose.Types.ObjectId(categoryId)
         }
+
         if (isPublished === "true") {
             filters.isPublished = true
         }
 
         console.log("filters", filters);
 
-        const products = await this.productService.getFilteredProducts(q as string, filters)
+
+        const products = await this.productService.getFilteredProducts(q as string, filters, paginationFilters)
 
         res.json(products)
     }

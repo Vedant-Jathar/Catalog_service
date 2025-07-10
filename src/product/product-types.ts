@@ -2,6 +2,7 @@ import { Request } from "express";
 import mongoose from "mongoose";
 
 export interface Product {
+    _id?: mongoose.Types.ObjectId,
     name: string,
     description: string,
     priceConfiguration: string | Record<string, string>,
@@ -21,4 +22,9 @@ export interface Filters {
     tenantId?: string
     categoryId?: mongoose.Types.ObjectId
     isPublished?: boolean
+}
+
+export interface PaginationFilters {
+    page: number,
+    limit: number
 }

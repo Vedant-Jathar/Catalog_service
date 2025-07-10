@@ -24,6 +24,8 @@ export interface getProductsRequest extends Request {
         q?: string,
         tenantId?: string,
         categoryId?: string,
-        isPublished?: string
+        isPublished?: string,
+        page?: string,
+        limit?: string
     }
 }
