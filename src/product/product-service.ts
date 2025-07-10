@@ -1,4 +1,4 @@
-import { Product } from "./product-types";
+import { Filters, Product } from "./product-types";
 import ProductModel from "./product-model"
 import productModel from "./product-model";
 
@@ -19,5 +19,44 @@ export class ProductService {
             },
             { new: true }
         )
+    }
+
+    getFilteredProducts = async (q: string, filters: Filters) => {
+
+        const searchQueryExp = new RegExp(q, "i")
+        const matchQuery = {
+            ...filters,
+            name: searchQueryExp
+        }
+
+        console.log("matchQuery", matchQuery);
+
+        const filteredProducts: Product[] = await productModel.aggregate([
+            {
+                $match: matchQuery
+            },
+            {
+                $lookup: {
+                    from: "categories",
+                    localField: "categoryId",
+                    foreignField: "_id",
+                    as: "category",
+                    pipeline: [
+                        {
+                            $project: {
+                                name: 1,
+                                _id: 1
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                $unwind: "$category"
+            }
+
+        ])
+
+        return filteredProducts
     }
 }

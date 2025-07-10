@@ -18,3 +18,12 @@ export interface AuthRequest extends Request {
         tenantId: string
     }
 }
+
+export interface getProductsRequest extends Request {
+    query: {
+        q?: string,
+        tenantId?: string,
+        categoryId?: string,
+        isPublished?: string
+    }
+}

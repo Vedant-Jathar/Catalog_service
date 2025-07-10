@@ -44,4 +44,8 @@ router.put("/:productId",
     asyncWrapper(productController.update)
 )
 
+router.get("/",
+    asyncWrapper(productController.getProducts)
+)
+
 export default router

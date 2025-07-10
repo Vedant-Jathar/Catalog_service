@@ -1,4 +1,5 @@
 import { Request } from "express";
+import mongoose from "mongoose";
 
 export interface Product {
     name: string,
@@ -15,6 +16,9 @@ export interface CreateProductRequest extends Request {
     body: Product
 }
 
-export interface PriceConfiguration {
-
+export interface Filters {
+    q?: string
+    tenantId?: string
+    categoryId?: mongoose.Types.ObjectId
+    isPublished?: boolean
 }
