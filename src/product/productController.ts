@@ -1,9 +1,9 @@
-import { NextFunction, Response } from "express"
+import { NextFunction, Request, Response } from "express"
 import { validationResult } from "express-validator"
 import createHttpError from "http-errors"
 import { ProductService } from "./product-service"
 import { Logger } from "winston"
-import { CreateProductRequest, Filters } from "./product-types"
+import { CreateProductRequest, Filters, Product } from "./product-types"
 import { FileStorage } from "../common/types/storage"
 import { v4 as uuidv4 } from "uuid"
 import { UploadedFile } from "express-fileupload"
@@ -140,11 +140,49 @@ export class ProductController {
             filters.isPublished = true
         }
 
-        console.log("filters", filters);
-
-
         const products = await this.productService.getFilteredProducts(q as string, filters, paginationFilters)
 
-        res.json(products)
+        const finalProductsData = (products.data as Product[]).map((product) => ({
+            ...product,
+            image: this.storage.getObjectUri(product.image!)
+        }))
+
+        const finalResponse = {
+            data: finalProductsData,
+            currentPage: products.currentPage,
+            perPage: products.perPage,
+            total: products.total
+        }
+
+        res.json(finalResponse)
+
+    }
+
+    getProductById = async (req: Request, res: Response) => {
+
+        const { productId } = req.params
+        const product = await this.productService.getProductByid(productId)
+
+        res.json(product)
+    }
+
+    deleteProductById = async (req: Request, res: Response, next: NextFunction) => {
+
+        // First check whether the manager trying to delete a product of a tenant is the manager of that tenant or not
+        const { productId } = req.params
+        const product = await this.productService.getProductById(productId)
+
+        console.log("product",product);
+        
+        if ((req as AuthRequest).auth.role === "manager") {
+            if (product.tenantId !== (req as AuthRequest).auth.tenantId) {
+                next(createHttpError(403, "Forbidden error"))
+                return
+            }
+        }
+
+        await this.productService.deleteProductByid(productId)
+
+        res.json({})
     }
 }

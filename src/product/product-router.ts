@@ -1,4 +1,4 @@
-import { Router } from "express";
+import {  Router } from "express";
 import authenticate from "../common/middlewares/authenticate";
 import { canAcces } from "../common/middlewares/canAccess";
 import { Roles } from "../common/constants";
@@ -46,6 +46,16 @@ router.put("/:productId",
 
 router.get("/",
     asyncWrapper(productController.getProducts)
+)
+
+router.get('/:productId',
+    asyncWrapper(productController.getProductById)
+)
+
+router.delete("/:productId",
+    authenticate,
+    canAcces([Roles.ADMIN, Roles.MANAGER]),
+    asyncWrapper(productController.deleteProductById)
 )
 
 export default router

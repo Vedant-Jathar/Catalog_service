@@ -2,6 +2,7 @@ import { Filters, PaginationFilters, Product } from "./product-types";
 import ProductModel from "./product-model"
 import productModel from "./product-model";
 import { PaginationLabels } from "../config/pagination";
+import createHttpError from "http-errors";
 
 export class ProductService {
 
@@ -20,6 +21,14 @@ export class ProductService {
             },
             { new: true }
         ) as Product
+    }
+
+    getProductByid = async (productId: string) => {
+        const product = await (productModel.findById(productId)) as Product
+        if (!product) {
+            throw createHttpError(404, "Product not found")
+        }
+        return product
     }
 
     getFilteredProducts = async (q: string, filters: Filters, paginationFilters: PaginationFilters) => {
@@ -62,5 +71,12 @@ export class ProductService {
         })
     }
 
-    
+    deleteProductByid = async (productId: string) => {
+        await productModel.deleteOne({ _id: productId })
+        return 
+    }
 }
+
+
+
+
