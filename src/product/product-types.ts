@@ -11,6 +11,7 @@ export interface Product {
     categoryId: string,
     isPublished: string,
     image?: string
+    _doc?: Record<string, string>
 }
 
 export interface CreateProductRequest extends Request {

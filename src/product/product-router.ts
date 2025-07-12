@@ -29,7 +29,7 @@ router.post('/',
     createProductValidator,
     asyncWrapper(productController.create)
 )
-
+ 
 router.put("/:productId",
     authenticate,
     canAcces([Roles.ADMIN, Roles.MANAGER]),

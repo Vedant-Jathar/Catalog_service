@@ -12,7 +12,7 @@ const priceConfigurationSchema = new mongoose.Schema({
         of: Number
     }
 })
-
+ 
 const attributeSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -53,7 +53,7 @@ const productSchema = new mongoose.Schema({
     isPublished: {
         type: Boolean,
         required: false,
-        default: true
+        default: false
     }
 
 }, { timestamps: true })
