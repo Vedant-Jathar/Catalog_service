@@ -66,7 +66,7 @@ export class ProductController {
 
         const { productId } = req.params
 
-        const existingProduct = await this.productService.getProductById(productId)
+        const existingProduct = await this.productService.getProductByid(productId)
 
         if (!existingProduct) {
             next(createHttpError(404, "Product not found"))
@@ -119,6 +119,8 @@ export class ProductController {
     }
 
     getProducts = async (req: getProductsRequest, res: Response) => {
+        console.log("ENtered");
+
         const { q, tenantId, categoryId, isPublished, page, limit } = req.query
 
         const paginationFilters = {
@@ -153,9 +155,9 @@ export class ProductController {
             perPage: products.perPage,
             total: products.total
         }
+        console.log("Reached ");
 
         res.json(finalResponse)
-
     }
 
     getProductById = async (req: Request, res: Response) => {
@@ -163,17 +165,24 @@ export class ProductController {
         const { productId } = req.params
         const product = await this.productService.getProductByid(productId)
 
-        res.json(product)
+        // Here i had to user "product._doc" since in the "product" object there was a lot of metadata that was coming along.
+        const finalProduct = {
+            ...product._doc,
+            image: this.storage.getObjectUri(product._doc!.image!)
+        }
+
+        res.json(finalProduct)
     }
 
     deleteProductById = async (req: Request, res: Response, next: NextFunction) => {
 
         // First check whether the manager trying to delete a product of a tenant is the manager of that tenant or not
         const { productId } = req.params
-        const product = await this.productService.getProductById(productId)
+        const product = await this.productService.getProductByIdWithImageFileName(productId)
 
-        console.log("product",product);
-        
+        console.log("product", product);
+
+
         if ((req as AuthRequest).auth.role === "manager") {
             if (product.tenantId !== (req as AuthRequest).auth.tenantId) {
                 next(createHttpError(403, "Forbidden error"))
@@ -182,6 +191,8 @@ export class ProductController {
         }
 
         await this.productService.deleteProductByid(productId)
+
+        await this.storage.delete(product.image!)
 
         res.json({})
     }

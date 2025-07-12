@@ -6,7 +6,7 @@ import createHttpError from "http-errors";
 
 export class ProductService {
 
-    getProductById = async (id: string) => {
+    getProductByIdWithImageFileName = async (id: string) => {
         return await productModel.findById(id) as Product
     }
 
