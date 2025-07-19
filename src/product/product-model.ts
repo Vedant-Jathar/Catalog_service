@@ -34,7 +34,7 @@ const productSchema = new mongoose.Schema({
         required: true
     },
     image: {
-        type: String,
+        type: String, 
         required: true
     },
     priceConfiguration: {
@@ -43,7 +43,7 @@ const productSchema = new mongoose.Schema({
     },
     attributes: [attributeSchema],
     tenantId: {
-        type: String,
+        type: Number,
         required: true
     },
     categoryId: {

@@ -1,8 +1,9 @@
 import { Filters, PaginationFilters, Product } from "./product-types";
-import ProductModel from "./product-model"
+// import ProductModel from "./product-model"
 import productModel from "./product-model";
 import { PaginationLabels } from "../config/pagination";
 import createHttpError from "http-errors";
+import { PipelineStage } from "mongoose";
 
 export class ProductService {
 
@@ -11,7 +12,7 @@ export class ProductService {
     }
 
     createProduct = async (product: Product) => {
-        return await ProductModel.create(product) as Product
+        return await productModel.create(product) as Product
     }
 
     updateProduct = async (productId: string, product: Product) => {
@@ -39,7 +40,8 @@ export class ProductService {
             name: searchQueryExp
         }
 
-        const aggregationPipeline = [
+        const aggregationPipeline: PipelineStage[] = [
+
             {
                 $match: matchQuery
             },
@@ -61,6 +63,11 @@ export class ProductService {
             },
             {
                 $unwind: "$category"
+            },
+            {
+                $sort: {
+                    createdAt: -1
+                }
             }
 
         ]
@@ -73,7 +80,7 @@ export class ProductService {
 
     deleteProductByid = async (productId: string) => {
         await productModel.deleteOne({ _id: productId })
-        return 
+        return
     }
 }
 

@@ -1,7 +1,7 @@
 import { Request } from "express"
 
 export interface PriceConfiguration {
-    [key: string]: {
+    [key: string]: { 
         priceType: "base" | "additional",
         availableOptions: string[]
     }

@@ -43,7 +43,7 @@ export class ProductController {
             description,
             priceConfiguration: JSON.parse(priceConfiguration as string) as Record<string, string>,
             attributes: JSON.parse(attributes as string) as Record<string, string>,
-            tenantId,
+            tenantId: Number(tenantId),
             categoryId,
             isPublished,
             image: imageName
@@ -119,8 +119,6 @@ export class ProductController {
     }
 
     getProducts = async (req: getProductsRequest, res: Response) => {
-        console.log("ENtered");
-
         const { q, tenantId, categoryId, isPublished, page, limit } = req.query
 
         const paginationFilters = {
@@ -155,11 +153,10 @@ export class ProductController {
             perPage: products.perPage,
             total: products.total
         }
-        console.log("Reached ");
 
         res.json(finalResponse)
     }
-
+    
     getProductById = async (req: Request, res: Response) => {
 
         const { productId } = req.params

@@ -7,7 +7,7 @@ export interface Product {
     description: string,
     priceConfiguration: string | Record<string, string>,
     attributes: string | Record<string, string>,
-    tenantId: string,
+    tenantId: number | string,
     categoryId: string,
     isPublished: string,
     image?: string

@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { Topping } from "./topping-types";
+import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
 
 const toppingsSchema = new mongoose.Schema({
     name: {
@@ -13,7 +14,7 @@ const toppingsSchema = new mongoose.Schema({
     },
 
     tenantId: {
-        type: String,
+        type: Number,
         required: true
     },
 
@@ -29,4 +30,5 @@ const toppingsSchema = new mongoose.Schema({
     }
 }, { timestamps: true })
 
+toppingsSchema.plugin(mongooseAggregatePaginate)
 export default mongoose.model<Topping>("Toppping", toppingsSchema)
