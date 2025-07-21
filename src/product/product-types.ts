@@ -20,7 +20,7 @@ export interface CreateProductRequest extends Request {
 
 export interface Filters {
     q?: string
-    tenantId?: string
+    tenantId?: number
     categoryId?: mongoose.Types.ObjectId
     isPublished?: boolean
 }

@@ -71,7 +71,6 @@ export class ToppingController {
 
         console.log("result", result);
 
-
         res.json(result)
     }
 }

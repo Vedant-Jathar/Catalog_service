@@ -31,4 +31,4 @@ const toppingsSchema = new mongoose.Schema({
 }, { timestamps: true })
 
 toppingsSchema.plugin(mongooseAggregatePaginate)
-export default mongoose.model<Topping>("Toppping", toppingsSchema)
+export default mongoose.model<Topping>("Topping", toppingsSchema)

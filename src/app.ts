@@ -7,8 +7,9 @@ import cors from "cors"
 import toppingRoutes from "./topping/topping-router"
 
 const app = express();
+
 app.use(cors({
-    origin: ["http://localhost:5173"],
+    origin: ["http://localhost:5173", "http://localhost:3000"],
     credentials: true
 }))
 

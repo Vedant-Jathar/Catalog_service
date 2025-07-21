@@ -1,7 +1,6 @@
 import { Topping, toppingFilters } from "./topping-types";
 import toppingsModel from "../topping/topping-model"
 import { PipelineStage } from "mongoose";
-import productModel from "../product/product-model";
 
 export class ToppingService {
 
@@ -20,7 +19,6 @@ export class ToppingService {
                 }
             }
         ]
-
         return await toppingsModel.aggregate<Topping[]>(aggregationPipeline)
     }
 }

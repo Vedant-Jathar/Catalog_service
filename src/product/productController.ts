@@ -119,6 +119,8 @@ export class ProductController {
     }
 
     getProducts = async (req: getProductsRequest, res: Response) => {
+
+
         const { q, tenantId, categoryId, isPublished, page, limit } = req.query
 
         const paginationFilters = {
@@ -129,7 +131,7 @@ export class ProductController {
         const filters: Filters = {}
 
         if (tenantId) {
-            filters.tenantId = tenantId
+            filters.tenantId = Number(tenantId)
         }
 
         if (categoryId && mongoose.Types.ObjectId.isValid(categoryId)) {
@@ -156,7 +158,7 @@ export class ProductController {
 
         res.json(finalResponse)
     }
-    
+
     getProductById = async (req: Request, res: Response) => {
 
         const { productId } = req.params
