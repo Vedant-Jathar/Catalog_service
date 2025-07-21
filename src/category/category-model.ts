@@ -1,7 +1,6 @@
 import mongoose from "mongoose"
 import { Attribute, Category, PriceConfiguration } from "./category-types"
 
-
 const AttributeSchema = new mongoose.Schema<Attribute>({
     name: {
         type: String,
@@ -47,6 +46,10 @@ const CategorySchema = new mongoose.Schema<Category>({
     attributes: {
         type: [AttributeSchema],
         required: true
+    },
+    hasToppings: {
+        type: Boolean,
+        default: false
     }
 }, { timestamps: true })
 
