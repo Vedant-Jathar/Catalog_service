@@ -50,15 +50,7 @@ export class ProductService {
                     from: "categories",
                     localField: "categoryId",
                     foreignField: "_id",
-                    as: "category",
-                    pipeline: [
-                        {
-                            $project: {
-                                name: 1,
-                                _id: 1
-                            }
-                        }
-                    ]
+                    as: "category"
                 }
             },
             {
