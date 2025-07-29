@@ -1,4 +1,4 @@
-import { body } from "express-validator"
+import { body } from "express-validator";
 
 export const createToppingValidator = [
     body("name")
@@ -13,7 +13,5 @@ export const createToppingValidator = [
         .isNumeric()
         .withMessage("Price should be numeric"),
 
-    body("tenantId")
-        .exists()
-        .withMessage("TenantId should be there")
-]
+    body("tenantId").exists().withMessage("TenantId should be there"),
+];

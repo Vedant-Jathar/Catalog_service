@@ -1,6 +1,6 @@
 export const PaginationLabels = {
-    totalDocs: 'total',
+    totalDocs: "total",
     page: "currentPage",
     limit: "perPage",
-    docs: "data"
-}
+    docs: "data",
+};

@@ -1,10 +1,10 @@
-import mongoose from "mongoose"
-import { Attribute, Category, PriceConfiguration } from "./category-types"
+import mongoose from "mongoose";
+import { Attribute, Category, PriceConfiguration } from "./category-types";
 
 const AttributeSchema = new mongoose.Schema<Attribute>({
     name: {
         type: String,
-        required: true
+        required: true,
     },
     widgetType: {
         type: String,
@@ -13,44 +13,47 @@ const AttributeSchema = new mongoose.Schema<Attribute>({
     },
     availableOptions: {
         type: [String],
-        required: true
+        required: true,
     },
     defaultValue: {
         type: String,
-        required: true
+        required: true,
     },
-})
+});
 
 const PriceConfigurationSchema = new mongoose.Schema<PriceConfiguration>({
     priceType: {
         type: String,
         required: true,
-        enum: ["base", "additional"]
+        enum: ["base", "additional"],
     },
     availableOptions: {
         type: [String],
-        required: true
-    }
-})
+        required: true,
+    },
+});
 
-const CategorySchema = new mongoose.Schema<Category>({
-    name: {
-        type: String,
-        required: true
+const CategorySchema = new mongoose.Schema<Category>(
+    {
+        name: {
+            type: String,
+            required: true,
+        },
+        priceConfiguration: {
+            type: Map,
+            of: PriceConfigurationSchema,
+            required: true,
+        },
+        attributes: {
+            type: [AttributeSchema],
+            required: true,
+        },
+        hasToppings: {
+            type: Boolean,
+            default: false,
+        },
     },
-    priceConfiguration: {
-        type: Map,
-        of: PriceConfigurationSchema,
-        required: true
-    },
-    attributes: {
-        type: [AttributeSchema],
-        required: true
-    },
-    hasToppings: {
-        type: Boolean,
-        default: false
-    }
-}, { timestamps: true })
+    { timestamps: true },
+);
 
-export default mongoose.model("Category", CategorySchema)
+export default mongoose.model("Category", CategorySchema);

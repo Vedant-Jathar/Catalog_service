@@ -7,23 +7,15 @@ export const createProductValidator = [
         .isString()
         .withMessage("Product name should be a string"),
 
-    body("description")
-        .exists()
-        .withMessage("Description is required"),
+    body("description").exists().withMessage("Description is required"),
 
     body("priceConfiguration")
         .exists()
         .withMessage("PriceConfiguration is required"),
 
-    body("attributes")
-        .exists()
-        .withMessage("Attributes aretenantId required"),
+    body("attributes").exists().withMessage("Attributes aretenantId required"),
 
-    body("tenantId")
-        .exists()
-        .withMessage("TenantId is required"),
+    body("tenantId").exists().withMessage("TenantId is required"),
 
-    body("categoryId")
-        .exists()
-        .withMessage("CategoryId is required")
-]
+    body("categoryId").exists().withMessage("CategoryId is required"),
+];

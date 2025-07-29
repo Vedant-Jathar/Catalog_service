@@ -1,5 +1,5 @@
-import { body } from "express-validator"
-import createHttpError from "http-errors"
+import { body } from "express-validator";
+import createHttpError from "http-errors";
 
 export const createCategoryValidator = [
     body("name")
@@ -16,15 +16,15 @@ export const createCategoryValidator = [
         .exists()
         .withMessage("Price Type is required")
         .custom((value: "base" | "addistional") => {
-            const validTypes = ["base", "additional"]
+            const validTypes = ["base", "additional"];
             if (!validTypes.includes(value)) {
-                throw createHttpError(400, `${value} is not allowed for the price type`)
+                throw createHttpError(
+                    400,
+                    `${value} is not allowed for the price type`,
+                );
             }
-            return true
+            return true;
         }),
 
-    body("attributes")
-        .exists()
-        .withMessage("Attributes are required"),
-
-]
+    body("attributes").exists().withMessage("Attributes are required"),
+];
