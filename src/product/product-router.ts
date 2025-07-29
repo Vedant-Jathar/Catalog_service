@@ -1,4 +1,4 @@
-import {  Router } from "express";
+import { Router } from "express";
 import authenticate from "../common/middlewares/authenticate";
 import { canAcces } from "../common/middlewares/canAccess";
 import { Roles } from "../common/constants";
@@ -10,52 +10,58 @@ import logger from "../config/logger";
 import fileUpload from "express-fileupload";
 import { S3Storage } from "../common/services/S3Storage";
 import createHttpError from "http-errors";
-const router = Router()
+import { createMessageProducerBroker } from "../common/factories/brokerFactory";
+const router = Router();
 
-const productService = new ProductService()
-const S3StorageService = new S3Storage()
-const productController = new ProductController(productService, logger, S3StorageService)
+const productService = new ProductService();
+const S3StorageService = new S3Storage();
+const messageProducerBroker = createMessageProducerBroker();
+const productController = new ProductController(
+    productService,
+    logger,
+    S3StorageService,
+    messageProducerBroker,
+);
 
-router.post('/',
+router.post(
+    "/",
     authenticate,
     canAcces([Roles.ADMIN, Roles.MANAGER]),
     fileUpload({
         limits: { fileSize: 500000 * 1024 },
         abortOnLimit: true,
         limitHandler: (req, res, next) => {
-            next(createHttpError(400, "Image size exceeds limit"))
-        }
+            next(createHttpError(400, "Image size exceeds limit"));
+        },
     }),
     createProductValidator,
-    asyncWrapper(productController.create)
-)
- 
-router.put("/:productId",
+    asyncWrapper(productController.create),
+);
+
+router.put(
+    "/:productId",
     authenticate,
     canAcces([Roles.ADMIN, Roles.MANAGER]),
     fileUpload({
         limits: { fileSize: 500000 * 1024 },
         abortOnLimit: true,
         limitHandler: (req, res, next) => {
-            next(createHttpError(400, "Image size exceeds limit"))
-        }
+            next(createHttpError(400, "Image size exceeds limit"));
+        },
     }),
     createProductValidator,
-    asyncWrapper(productController.update)
-)
+    asyncWrapper(productController.update),
+);
 
-router.get("/",
-    asyncWrapper(productController.getProducts)
-)
+router.get("/", asyncWrapper(productController.getProducts));
 
-router.get('/:productId',
-    asyncWrapper(productController.getProductById)
-)
+router.get("/:productId", asyncWrapper(productController.getProductById));
 
-router.delete("/:productId",
+router.delete(
+    "/:productId",
     authenticate,
     canAcces([Roles.ADMIN, Roles.MANAGER]),
-    asyncWrapper(productController.deleteProductById)
-)
+    asyncWrapper(productController.deleteProductById),
+);
 
-export default router
+export default router;
