@@ -14,6 +14,7 @@ import {
     MessageProducerBroker,
 } from "../common/types";
 import mongoose from "mongoose";
+import { mapToObject } from "../utils";
 
 export class ProductController {
     constructor(
@@ -80,7 +81,12 @@ export class ProductController {
             "product",
             JSON.stringify({
                 _id: newProduct._id,
-                priceConfiguration: newProduct.priceConfiguration,
+                priceConfiguration: mapToObject(
+                    newProduct.priceConfiguration as unknown as Map<
+                        string,
+                        any
+                    >,
+                ),
             }),
         );
 
@@ -174,7 +180,12 @@ export class ProductController {
             "product",
             JSON.stringify({
                 _id: updatedProduct._id,
-                priceConfiguration: updatedProduct.priceConfiguration,
+                priceConfiguration: mapToObject(
+                    updatedProduct.priceConfiguration as unknown as Map<
+                        string,
+                        any
+                    >,
+                ),
             }),
         );
 
