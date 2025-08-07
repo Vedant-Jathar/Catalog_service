@@ -41,5 +41,6 @@ router.post(
 );
 
 router.get("/", asyncWrapper(toppingController.getToppings));
+router.get("/all", asyncWrapper(toppingController.getAllToppings));
 
 export default router;

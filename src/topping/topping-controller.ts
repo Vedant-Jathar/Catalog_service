@@ -12,6 +12,7 @@ import { v4 as uuidV4 } from "uuid";
 import { UploadedFile } from "express-fileupload";
 import { validationResult } from "express-validator";
 import { AuthRequest, MessageProducerBroker } from "../common/types";
+import toppingModel from "./topping-model";
 
 export class ToppingController {
     constructor(
@@ -72,10 +73,19 @@ export class ToppingController {
 
         this.messageProducerBroker.sendMessage(
             "topping",
-            JSON.stringify({ _id: topping._id, price: topping.price }),
+            JSON.stringify({
+                _id: topping._id,
+                price: topping.price,
+                tenantId: topping.tenantId,
+            }),
         );
 
         res.status(201).json({ _id: topping._id });
+    };
+
+    getAllToppings = async (req: Request, res: Response) => {
+        const allToppings = await toppingModel.find();
+        res.json(allToppings);
     };
 
     getToppings = async (req: Request, res: Response) => {
