@@ -12,8 +12,12 @@ const startServer = async () => {
         await mongoose.connect(config.get("database.url"));
         logger.info("Mongo Database connection successful");
 
+        console.log("Hi");
+
         messageProducerBroker = createMessageProducerBroker();
         await messageProducerBroker.connect();
+
+        console.log("Bi");
 
         // Listening on the port:
         const PORT: number = config.get("server.port");
