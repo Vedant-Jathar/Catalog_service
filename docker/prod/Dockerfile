@@ -35,7 +35,7 @@ RUN --mount=type=bind,source=package.json,target=package.json \
     --mount=type=cache,target=/root/.npm \
     npm ci --omit=dev --ignore-scripts
 
-
+    
 COPY --from=builder --chown=node:node /home/node/app/dist ./
 
 EXPOSE 5501
