@@ -168,7 +168,7 @@ export class ProductController {
             tenantId,
             categoryId,
             isPublished,
-            image: imageName ? imageName : oldImageName,
+            image: imageName ? imageName : existingProduct?.image,
         };
 
         const updatedProduct = await this.productService.updateProduct(

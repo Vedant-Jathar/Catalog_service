@@ -83,6 +83,74 @@ export class ToppingController {
         res.status(201).json({ _id: topping._id });
     };
 
+    update = async (req: Request, res: Response, next: NextFunction) => {
+        const { id } = req.params;
+
+        if (!req.files || !req.files.image) {
+            next(createHttpError(404, "Image not found"));
+            return;
+        }
+
+        const result = validationResult(req);
+
+        if (!result.isEmpty()) {
+            next(createHttpError(400, result.array()[0].msg as string));
+            return;
+        }
+
+        const { name, price, isPublished, tenantId } = req.body;
+
+        // The manager of a tenant can create toppings only for that tenant:
+        if (
+            (req as AuthRequest).auth.role === "manager" &&
+            (req as AuthRequest).auth.tenantId !== String(tenantId)
+        ) {
+            next(createHttpError(403, "Forbidden error"));
+            return;
+        }
+
+        const existingToppping = await toppingModel.findById(id);
+
+        if (!existingToppping) {
+            return next(createHttpError(400, "Topping does not exist"));
+        }
+
+        let imageName: string | undefined;
+        let oldImageName: string | undefined;
+
+        if (req.files?.image) {
+            const image = req.files.image as UploadedFile;
+            imageName = uuidV4();
+
+            await this.storage.upload({
+                filename: imageName,
+                filedata: image.data.buffer,
+            });
+
+            oldImageName = existingToppping.image;
+
+            await this.storage.delete(oldImageName);
+        }
+
+        const updateToppingData = {
+            name,
+            price,
+            isPublished,
+            image: imageName ? imageName : existingToppping.image,
+            tenantId,
+        };
+
+        const updatedTopping: Topping = (await toppingModel.findByIdAndUpdate(
+            id,
+            updateToppingData,
+            {
+                new: true,
+            },
+        ))!;
+
+        res.json({ id: updatedTopping._id });
+    };
+
     getAllToppings = async (req: Request, res: Response) => {
         const allToppings = await toppingModel.find();
         res.json(allToppings);
@@ -100,5 +168,15 @@ export class ToppingController {
         console.log("result", result);
 
         res.json(result);
+    };
+
+    delete = async (req: Request, res: Response) => {
+        const { id } = req.params;
+        const existingToppping = await toppingModel.findById({ _id: id });
+        if (!existingToppping) {
+            throw createHttpError(400, "Topping does not exist");
+        }
+        await toppingModel.deleteOne({ _id: id });
+        res.json({});
     };
 }
