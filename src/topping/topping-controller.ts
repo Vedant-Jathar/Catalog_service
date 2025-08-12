@@ -86,11 +86,6 @@ export class ToppingController {
     update = async (req: Request, res: Response, next: NextFunction) => {
         const { id } = req.params;
 
-        if (!req.files || !req.files.image) {
-            next(createHttpError(404, "Image not found"));
-            return;
-        }
-
         const result = validationResult(req);
 
         if (!result.isEmpty()) {
@@ -112,7 +107,7 @@ export class ToppingController {
         const existingToppping = await toppingModel.findById(id);
 
         if (!existingToppping) {
-            return next(createHttpError(400, "Topping does not exist"));
+            return next(createHttpError(404, "Topping does not exist"));
         }
 
         let imageName: string | undefined;
