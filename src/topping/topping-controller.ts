@@ -65,7 +65,7 @@ export class ToppingController {
             price,
             tenantId,
             isPublished,
-            image: this.storage.getObjectUri(imageName),
+            image: imageName,
         };
 
         const topping: Topping =
@@ -104,9 +104,9 @@ export class ToppingController {
             return;
         }
 
-        const existingToppping = await toppingModel.findById(id);
+        const existingTopping = await toppingModel.findById(id);
 
-        if (!existingToppping) {
+        if (!existingTopping) {
             return next(createHttpError(404, "Topping does not exist"));
         }
 
@@ -122,7 +122,7 @@ export class ToppingController {
                 filedata: image.data.buffer,
             });
 
-            oldImageName = existingToppping.image;
+            oldImageName = existingTopping.image;
 
             await this.storage.delete(oldImageName);
         }
@@ -131,7 +131,7 @@ export class ToppingController {
             name,
             price,
             isPublished,
-            image: imageName ? imageName : existingToppping.image,
+            image: imageName ? imageName : existingTopping.image,
             tenantId,
         };
 
@@ -148,21 +148,31 @@ export class ToppingController {
 
     getAllToppings = async (req: Request, res: Response) => {
         const allToppings = await toppingModel.find();
-        res.json(allToppings);
+        const allToppingsWithImageUrl = allToppings.map((topping) => {
+            return {
+                ...topping,
+                image: this.storage.getObjectUri(topping.image),
+            };
+        });
+        res.json(allToppingsWithImageUrl);
     };
 
     getToppings = async (req: Request, res: Response) => {
         const { tenantId } = (req as getToppingsRequest).query;
-
         const filters = {
             tenantId: Number(tenantId),
         };
 
         const result = await this.toppingService.getToppings(filters);
 
-        console.log("result", result);
+        const toppingsWithImageUrl = result.map((topping) => {
+            return {
+                ...topping,
+                image: this.storage.getObjectUri(topping.image),
+            };
+        });
 
-        res.json(result);
+        res.json(toppingsWithImageUrl);
     };
 
     delete = async (req: Request, res: Response) => {

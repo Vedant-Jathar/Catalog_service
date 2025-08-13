@@ -18,6 +18,6 @@ export class ToppingService {
                 },
             },
         ];
-        return await toppingsModel.aggregate<Topping[]>(aggregationPipeline);
+        return await toppingsModel.aggregate<Topping>(aggregationPipeline);
     };
 }
