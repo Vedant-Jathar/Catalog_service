@@ -147,7 +147,7 @@ export class ToppingController {
     };
 
     getAllToppings = async (req: Request, res: Response) => {
-        const allToppings = await toppingModel.find();
+        const allToppings = await toppingModel.find().lean();
         const allToppingsWithImageUrl = allToppings.map((topping) => {
             return {
                 ...topping,
