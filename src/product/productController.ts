@@ -115,13 +115,14 @@ export class ProductController {
 
         if ((req as AuthRequest).auth.role !== Roles.ADMIN) {
             if (
-                (req as AuthRequest).auth.tenantId !== existingProduct?.tenantId
+                Number((req as AuthRequest).auth.tenantId) !==
+                Number(existingProduct?.tenantId)
             ) {
                 console.log(
                     "(req as AuthRequest).auth.tenantId",
-                    (req as AuthRequest).auth.tenantId,
+                    typeof (req as AuthRequest).auth.tenantId,
                     "existingProduct?.tenantId",
-                    existingProduct?.tenantId,
+                    typeof existingProduct?.tenantId,
                 );
 
                 next(
