@@ -21,7 +21,6 @@ export default expressjwt({
             const accessToken = authHeader.split(" ")[1];
             return accessToken;
         }
-        console.log("req.cookies", req.cookies);
 
         const { accessToken } = req.cookies as AuthCookie;
 

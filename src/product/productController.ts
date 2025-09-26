@@ -32,7 +32,6 @@ export class ProductController {
         // Validating the data sent in the body
         const result = validationResult(req);
         if (!result.isEmpty()) {
-            console.log("result.array()", result.array());
             throw createHttpError(400, result.array()[0].msg as string);
         }
 
@@ -112,12 +111,19 @@ export class ProductController {
             next(createHttpError(404, "Product not found"));
         }
 
-        // Check if the user trying to update this product is the manager of the tenant the product belongs to:
+        // If the user is a manager then check whether he/she is the manager of the restaurant whose product he or she is updating:
 
         if ((req as AuthRequest).auth.role !== Roles.ADMIN) {
             if (
                 (req as AuthRequest).auth.tenantId !== existingProduct?.tenantId
             ) {
+                console.log(
+                    "(req as AuthRequest).auth.tenantId",
+                    (req as AuthRequest).auth.tenantId,
+                    "existingProduct?.tenantId",
+                    existingProduct?.tenantId,
+                );
+
                 next(
                     createHttpError(
                         403,
@@ -261,8 +267,6 @@ export class ProductController {
             await this.productService.getProductByIdWithImageFileName(
                 productId,
             );
-
-        console.log("product", product);
 
         if ((req as AuthRequest).auth.role === "manager") {
             if (product.tenantId !== (req as AuthRequest).auth.tenantId) {
