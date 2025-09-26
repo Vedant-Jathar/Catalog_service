@@ -270,7 +270,10 @@ export class ProductController {
             );
 
         if ((req as AuthRequest).auth.role === "manager") {
-            if (product.tenantId !== (req as AuthRequest).auth.tenantId) {
+            if (
+                Number(product.tenantId) !==
+                Number((req as AuthRequest).auth.tenantId)
+            ) {
                 next(createHttpError(403, "Forbidden error"));
                 return;
             }
